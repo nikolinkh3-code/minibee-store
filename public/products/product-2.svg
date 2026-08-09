@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000">
+  <rect width="100%" height="100%" fill="#eee9ff"/>
+  <text x="50%" y="48%" text-anchor="middle" font-family="Arial" font-size="44" fill="#8b78a6">MINIBEE</text>
+  <text x="50%" y="55%" text-anchor="middle" font-family="Arial" font-size="24" fill="#8f7780">Product 02</text>
+</svg>
