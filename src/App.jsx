@@ -461,24 +461,68 @@ Status: Pre-order`;
             </button>
 
 
-            <div
-              className={
-                selectedProduct.image2
-                  ? "modal-image two-images"
-                  : "modal-image"
-              }
-            >
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-              />
+            <div className="modal-gallery">
 
-              {selectedProduct.image2 && (
+              <div className="modal-slider">
+
                 <img
-                  src={selectedProduct.image2}
-                  alt={`${selectedProduct.name} second view`}
+                  src={getProductImages(selectedProduct)[currentImage]}
+                  alt={`${selectedProduct.name} view ${currentImage + 1}`}
                 />
+
+                {getProductImages(selectedProduct).length > 1 && (
+                  <>
+                    <button
+                      className="slider-arrow slider-prev"
+                      onClick={() =>
+                        setCurrentImage((current) =>
+                          current === 0
+                            ? getProductImages(selectedProduct).length - 1
+                            : current - 1
+                        )
+                      }
+                      aria-label="Previous image"
+                    >
+                      ‹
+                    </button>
+
+                    <button
+                      className="slider-arrow slider-next"
+                      onClick={() =>
+                        setCurrentImage((current) =>
+                          current === getProductImages(selectedProduct).length - 1
+                            ? 0
+                            : current + 1
+                        )
+                      }
+                      aria-label="Next image"
+                    >
+                      ›
+                    </button>
+                  </>
+                )}
+
+              </div>
+
+              {getProductImages(selectedProduct).length > 1 && (
+                <div className="slider-dots">
+
+                  {getProductImages(selectedProduct).map((image, index) => (
+                    <button
+                      key={`${image}-${index}`}
+                      className={
+                        currentImage === index
+                          ? "slider-dot active"
+                          : "slider-dot"
+                      }
+                      onClick={() => setCurrentImage(index)}
+                      aria-label={`View image ${index + 1}`}
+                    />
+                  ))}
+
+                </div>
               )}
+
             </div>
 
 
