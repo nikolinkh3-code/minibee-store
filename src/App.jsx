@@ -147,7 +147,10 @@ Status: Pre-order`;
               }}
             >
 
-              <div className="image-box">
+              <div
+                className="image-box clickable-product"
+                onClick={() => setSelectedProduct(product)}
+              >
 
                 <img
                   src={product.image}
@@ -175,7 +178,10 @@ Status: Pre-order`;
                   {product.category}
                 </p>
 
-                <h2>
+                <h2
+                  className="clickable-product-name"
+                  onClick={() => setSelectedProduct(product)}
+                >
                   {product.name}
                 </h2>
 

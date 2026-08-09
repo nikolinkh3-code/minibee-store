@@ -2243,3 +2243,20 @@ footer {
   }
 
 }
+
+
+/* CLICKABLE PRODUCT IMAGE + NAME */
+
+.clickable-product {
+  cursor: pointer;
+}
+
+.clickable-product-name {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.clickable-product-name:hover {
+  color: var(--dark-pink);
+}
+
