@@ -445,11 +445,24 @@ Status: Pre-order`;
             </button>
 
 
-            <div className="modal-image">
+            <div
+              className={
+                selectedProduct.image2
+                  ? "modal-image two-images"
+                  : "modal-image"
+              }
+            >
               <img
                 src={selectedProduct.image}
                 alt={selectedProduct.name}
               />
+
+              {selectedProduct.image2 && (
+                <img
+                  src={selectedProduct.image2}
+                  alt={`${selectedProduct.name} second view`}
+                />
+              )}
             </div>
 
 

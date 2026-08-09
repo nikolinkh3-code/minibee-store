@@ -58,6 +58,17 @@ const products = [
     description: "Soft pink sneakers for a casual everyday look.",
     available: false,
   },
+
+  {
+    id: 7,
+    name: "Children's Strawberry Bear Hairband",
+    category: "Kids Accessories",
+    price: 500,
+    image: "/products/strawberry-bear-1.jpg",
+    image2: "/products/strawberry-bear-2.jpg",
+    description: "Cute strawberry bear hairband for children with a soft and playful design.",
+    available: true,
+  },
 ];
 
 export default products;
