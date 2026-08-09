@@ -2260,3 +2260,180 @@ footer {
   color: var(--dark-pink);
 }
 
+
+
+/* =================================
+   PRODUCT IMAGE SLIDER
+================================= */
+
+.modal-gallery {
+  min-width: 0;
+
+  background: #fff1f6;
+
+  overflow: hidden;
+}
+
+
+.modal-slider {
+  position: relative;
+
+  width: 100%;
+  height: 540px;
+
+  overflow: hidden;
+}
+
+
+.modal-slider img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  animation: sliderImageFade 0.25s ease;
+}
+
+
+/* LEFT + RIGHT ARROWS */
+
+.slider-arrow {
+  position: absolute;
+
+  top: 50%;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  color: #3a3035;
+
+  font-size: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transform: translateY(-50%);
+
+  box-shadow:
+    0 5px 18px
+    rgba(40, 25, 32, 0.12);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.slider-arrow:hover {
+  background: white;
+
+  transform:
+    translateY(-50%)
+    scale(1.08);
+}
+
+
+.slider-prev {
+  left: 15px;
+}
+
+
+.slider-next {
+  right: 15px;
+}
+
+
+/* DOTS */
+
+.slider-dots {
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  background: #fffafc;
+}
+
+
+.slider-dot {
+  width: 7px;
+  height: 7px;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #dbc7cf;
+
+  cursor: pointer;
+
+  transition:
+    width 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.slider-dot.active {
+  width: 20px;
+
+  border-radius: 20px;
+
+  background: var(--dark-pink);
+}
+
+
+@keyframes sliderImageFade {
+
+  from {
+    opacity: 0.65;
+  }
+
+  to {
+    opacity: 1;
+  }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .modal-slider {
+    height: 360px;
+  }
+
+
+  .slider-arrow {
+    width: 36px;
+    height: 36px;
+
+    font-size: 25px;
+  }
+
+
+  .slider-prev {
+    left: 10px;
+  }
+
+
+  .slider-next {
+    right: 10px;
+  }
+
+}

@@ -5,6 +5,16 @@ import products from "./data/products";
 function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const openProduct = (product) => {
+    setSelectedProduct(product);
+    setCurrentImage(0);
+  };
+
+  const getProductImages = (product) => {
+    return [product.image, product.image2].filter(Boolean);
+  };
 
   const WHATSAPP_NUMBER = "8801XXXXXXXXX";
 
@@ -149,7 +159,7 @@ Status: Pre-order`;
 
               <div
                 className="image-box clickable-product"
-                onClick={() => setSelectedProduct(product)}
+                onClick={() => openProduct(product)}
               >
 
                 <img
@@ -180,7 +190,7 @@ Status: Pre-order`;
 
                 <h2
                   className="clickable-product-name"
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={() => openProduct(product)}
                 >
                   {product.name}
                 </h2>
@@ -220,7 +230,7 @@ Status: Pre-order`;
 
                 <button
                   className="view-button"
-                  onClick={() => setSelectedProduct(product)}
+                  onClick={() => openProduct(product)}
                 >
                   View Product
                 </button>
