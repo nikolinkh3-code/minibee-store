@@ -16,11 +16,11 @@ function App() {
     return [product.image, product.image2].filter(Boolean);
   };
 
-  const WHATSAPP_NUMBER = "8801XXXXXXXXX";
+  const WHATSAPP_NUMBER = "8801613113028";
 
-  const BKASH_NUMBER = "01XXXXXXXXX";
-  const NAGAD_NUMBER = "01XXXXXXXXX";
-  const ROCKET_NUMBER = "01XXXXXXXXX";
+  const BKASH_NUMBER = "01521386564";
+  const NAGAD_NUMBER = "01521386564";
+  const ROCKET_NUMBER = "01521386564";
 
   const formatPrice = (amount) => {
     return `৳ ${new Intl.NumberFormat("en-BD", {
