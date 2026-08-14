@@ -76,6 +76,23 @@ const products = [
     description: "Cute strawberry bear hairband for children with a soft and playful design.",
     available: true,
   },
+  {
+    id: 8,
+    name: "Korean-style PU Leather Bucket Shoulder Bag",
+    category: "Bags",
+    price: 1550,
+    image: "/products/korean-pu-bucket-bag-1.jpg",
+    images: [
+      "/products/korean-pu-bucket-bag-1.jpg",
+      "/products/korean-pu-bucket-bag-2.jpg",
+      "/products/korean-pu-bucket-bag-3.jpg",
+      "/products/korean-pu-bucket-bag-4.jpg",
+      "/products/korean-pu-bucket-bag-5.jpg",
+    ],
+    description: "A stylish Korean-style PU leather bucket shoulder bag with a clean and elegant everyday look.",
+    available: false,
+  },
+
 ];
 
 export default products;
