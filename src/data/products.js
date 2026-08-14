@@ -18,12 +18,19 @@ const products = [
 
   {
     id: 2,
-    name: "Soft Pink Bottle",
+    name: "French Double-Layered Ribbon Bow Hair Clips",
     category: "Accessories",
-    price: 750,
-    image: "/products/product-2.svg",
-    description: "A simple pastel bottle made for everyday use.",
-    available: true,
+    price: 350,
+    image: "/products/french-ribbon-bow-clips-1.jpg",
+    images: [
+      "/products/french-ribbon-bow-clips-1.jpg",
+      "/products/french-ribbon-bow-clips-2.jpg",
+      "/products/french-ribbon-bow-clips-3.jpg",
+      "/products/french-ribbon-bow-clips-4.jpg",
+      "/products/french-ribbon-bow-clips-5.jpg",
+    ],
+    description: "French-style double-layered ribbon bow hair clips. Set includes 4 pieces.",
+    available: false,
   },
 
   {
