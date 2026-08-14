@@ -53,11 +53,19 @@ const products = [
 
   {
     id: 4,
-    name: "Mini Perfume",
+    name: "LEEINTO 6-Color Eyeshadow Palette",
     category: "Makeup",
-    price: 950,
-    image: "/products/product-4.svg",
-    description: "A compact perfume with a soft and elegant style.",
+    price: 350,
+    image: "/products/leeinto-eyeshadow-palette-1.jpg",
+    images: [
+      "/products/leeinto-eyeshadow-palette-1.jpg",
+      "/products/leeinto-eyeshadow-palette-2.jpg",
+      "/products/leeinto-eyeshadow-palette-3.jpg",
+      "/products/leeinto-eyeshadow-palette-4.jpg",
+      "/products/leeinto-eyeshadow-palette-5.jpg",
+      "/products/leeinto-eyeshadow-palette-6.jpg",
+    ],
+    description: "LEEINTO 6-color eyeshadow palette with versatile shades for soft everyday and defined makeup looks.",
     available: false,
   },
 
