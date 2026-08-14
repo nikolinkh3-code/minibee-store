@@ -1,18 +1,18 @@
 const products = [
-  {
-    id: 1,
-    name: "Pink Mini Bag",
-    category: "Bag",
-    price: 1250,
-    image: "/products/product-1.svg",
-    description: "A cute everyday mini bag with a soft Minibee aesthetic.",
-    available: true,
-  },
+{
+  id: 1,
+  name: "PU Leather Shoulder Bag",
+  category: "Bags",
+  price: 1650,
+  image: "/products/pu-leather-shoulder-bag.jpg",
+  description: "Stylish PU leather shoulder bag with a clean and elegant everyday design.",
+  available: false,
+},
 
   {
     id: 2,
     name: "Soft Pink Bottle",
-    category: "Lifestyle",
+    category: "Accessories",
     price: 750,
     image: "/products/product-2.svg",
     description: "A simple pastel bottle made for everyday use.",
@@ -32,7 +32,7 @@ const products = [
   {
     id: 4,
     name: "Mini Perfume",
-    category: "Beauty",
+    category: "Makeup",
     price: 950,
     image: "/products/product-4.svg",
     description: "A compact perfume with a soft and elegant style.",
@@ -42,7 +42,7 @@ const products = [
   {
     id: 5,
     name: "Cute Sunglasses",
-    category: "Fashion",
+    category: "Dresses",
     price: 850,
     image: "/products/product-5.svg",
     description: "Simple everyday sunglasses with a cute aesthetic.",
@@ -62,7 +62,7 @@ const products = [
   {
     id: 7,
     name: "Children's Strawberry Bear Hairband",
-    category: "Kids Accessories",
+    category: "Accessories",
     price: 500,
     image: "/products/strawberry-bear-1.jpg",
     image2: "/products/strawberry-bear-2.jpg",

@@ -13,6 +13,10 @@ function App() {
   };
 
   const getProductImages = (product) => {
+    if (product.images && product.images.length > 0) {
+      return product.images;
+    }
+
     return [product.image, product.image2].filter(Boolean);
   };
 
@@ -34,7 +38,13 @@ function App() {
 
   const categories = [
     "All",
-    ...new Set(products.map((product) => product.category)),
+    "Bags",
+    "Shoes",
+    "Dresses",
+    "Makeup",
+    "Jewellery",
+    "Accessories",
+    "Stationery",
   ];
 
   const filteredProducts =
