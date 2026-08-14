@@ -6,10 +6,12 @@ function App() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentImage, setCurrentImage] = useState(0);
+  const [selectedSize, setSelectedSize] = useState("");
 
   const openProduct = (product) => {
     setSelectedProduct(product);
     setCurrentImage(0);
+    setSelectedSize("");
   };
 
   const getProductImages = (product) => {
@@ -55,18 +57,25 @@ function App() {
         );
 
   const orderOnWhatsApp = (product) => {
+    if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+      alert("Please select a size first.");
+      return;
+    }
+
+    const sizeText = product.sizes ? `\nSize: ${selectedSize}` : "";
+
     const message = product.available
       ? `Hi Minibee, I want to order:
 
 ${product.name}
 Price: ${formatPrice(product.price)}
-Status: Available`
+Status: Available${sizeText}`
       : `Hi Minibee, I want to pre-order:
 
 ${product.name}
 Price: ${formatPrice(product.price)}
 50% Advance: ${formatPrice(getAdvanceAmount(product))}
-Status: Pre-order`;
+Status: Pre-order${sizeText}`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
       message
@@ -565,6 +574,29 @@ Status: Pre-order`;
                   : "Pre-order"}
               </div>
 
+
+              {selectedProduct.sizes && selectedProduct.sizes.length > 0 && (
+                <div className="size-section">
+                  <p className="size-title">Select Size</p>
+
+                  <div className="size-options">
+                    {selectedProduct.sizes.map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        className={
+                          selectedSize === size
+                            ? "size-button active"
+                            : "size-button"
+                        }
+                        onClick={() => setSelectedSize(size)}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <p className="modal-description">
                 {selectedProduct.description}

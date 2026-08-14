@@ -73,11 +73,19 @@ const products = [
 
   {
     id: 6,
-    name: "Pink Sneakers",
+    name: "Chic Low-Heeled Slides with Open Toes, Polka Dots and a Delicate Bow Accent",
     category: "Shoes",
-    price: 2250,
-    image: "/products/product-6.svg",
-    description: "Soft pink sneakers for a casual everyday look.",
+    price: 1300,
+    sizes: [35, 36, 37, 38, 39, 40],
+    image: "/products/polka-dot-bow-slides-1.jpg",
+    images: [
+      "/products/polka-dot-bow-slides-1.jpg",
+      "/products/polka-dot-bow-slides-2.jpg",
+      "/products/polka-dot-bow-slides-3.jpg",
+      "/products/polka-dot-bow-slides-4.jpg",
+      "/products/polka-dot-bow-slides-5.jpg",
+    ],
+    description: "Chic low-heeled open-toe slides featuring polka dots and a delicate bow accent.",
     available: false,
   },
 
