@@ -63,12 +63,20 @@ const products = [
 
   {
     id: 5,
-    name: "Cute Sunglasses",
+    name: "Summer Fashion Floral Sleeveless Cami Dress",
     category: "Dresses",
-    price: 850,
-    image: "/products/product-5.svg",
-    description: "Simple everyday sunglasses with a cute aesthetic.",
-    available: true,
+    price: 999,
+    sizes: ["M", "L", "XL", "2XL"],
+    image: "/products/floral-cami-dress-1.jpg",
+    images: [
+      "/products/floral-cami-dress-1.jpg",
+      "/products/floral-cami-dress-2.jpg",
+      "/products/floral-cami-dress-3.jpg",
+      "/products/floral-cami-dress-4.jpg",
+      "/products/floral-cami-dress-5.jpg",
+    ],
+    description: "A lightweight floral sleeveless cami dress with a fresh summer look.",
+    available: false,
   },
 
   {
