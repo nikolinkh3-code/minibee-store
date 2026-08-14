@@ -35,11 +35,19 @@ const products = [
 
   {
     id: 3,
-    name: "Pastel Headphones",
+    name: "Hair Claws for Women",
     category: "Accessories",
-    price: 1650,
-    image: "/products/product-3.svg",
-    description: "Comfortable headphones with a clean pastel look.",
+    price: 300,
+    image: "/products/hair-claws-women-1.jpg",
+    images: [
+      "/products/hair-claws-women-1.jpg",
+      "/products/hair-claws-women-2.jpg",
+      "/products/hair-claws-women-3.jpg",
+      "/products/hair-claws-women-4.jpg",
+      "/products/hair-claws-women-5.jpg",
+      "/products/hair-claws-women-6.jpg",
+    ],
+    description: "Stylish hair claws for women, perfect for everyday use and easy hair styling.",
     available: false,
   },
 
