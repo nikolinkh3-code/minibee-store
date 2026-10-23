@@ -1,8 +1,9 @@
 import { useState } from "react";
 import "./App.css";
-import products from "./data/products";
+import useProducts from "./data/useProducts";
 
 function App() {
+  const products = useProducts();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentImage, setCurrentImage] = useState(0);
