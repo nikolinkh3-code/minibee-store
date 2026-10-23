@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Add to Minibee</title>
+<style>
+  body { font: 16px/1.6 system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; color: #222; background: #fffaf7; }
+  a.btn { display: inline-block; padding: 12px 22px; background: #c25d80; color: #fff; border-radius: 10px; text-decoration: none; font-weight: 600; }
+  li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<h1>Add to Minibee</h1>
+<p><b>1.</b> Drag this button to your browser's bookmarks bar:</p>
+<p><a class="btn" id="bookmarklet" href="#">Add to Minibee</a></p>
+
+<p><b>2a. Many items at once</b> (fastest):</p>
+<ol>
+  <li>Search on <b>mobile.yangkeduo.com</b> (Pinduoduo), e.g. "ins风可爱发夹" or "韩版小众包包". Scroll down to load more items.</li>
+  <li>Click the <b>Add to Minibee</b> bookmark. All items from the search show in a grid.</li>
+  <li>Tap the items you like, then <b>Save selected</b>. Photos, English name, price and sizes are filled in automatically.</li>
+</ol>
+
+<p><b>2b. One item</b> (to pick photos and name yourself):</p>
+<ol>
+  <li>Open the item's page on Pinduoduo and click <b>Add to Minibee</b>.</li>
+  <li>Tap the photos to use (one item, no text photos), check the name, click <b>Save</b>.</li>
+</ol>
+
+<p>New items show on the site after a page refresh. To fix a name, price or photo, or to delete an item, change its row in the "Minibee Products" Google Sheet.</p>
+
+<script>
+// The bookmarklet: runs on Pinduoduo (mobile.yangkeduo.com) search or product pages.
+function minibeeAdd() {
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwoAfiW83JNrUBCFZJIQFfAHSwPHB3-ia5fhdSUGab9gVHtWrQz6lMY3vEyvTZ7gv7hzg/exec";
+  const KEY = "minibee-gjdm89dsgb61";
+  const PROXY = "https://minibee-store.pages.dev/img/"; // direct pddpic links don't load inside the page
+  // Default sizes per category (the sheet column is "models").
+  const MODELS = {
+    Bags: "",
+    Shoes: "35, 36, 37, 38, 39, 40",
+    Dresses: "S, M, L, XL",
+    Makeup: "",
+    Jewellery: "",
+    Accessories: "",
+    Stationery: "",
+  };
+  // Chinese title words -> English name words, most specific first.
+  const WORDS = [
+    ["凯蒂猫", "Hello Kitty"], ["kitty", "Hello Kitty"], ["美乐蒂", "My Melody"], ["库洛米", "Kuromi"], ["玉桂狗", "Cinnamoroll"],
+    ["草莓熊", "Lotso"], ["小熊", "Bear"], ["兔", "Bunny"], ["猫", "Kitty"], ["狗", "Puppy"], ["草莓", "Strawberry"], ["樱桃", "Cherry"],
+    ["雏菊", "Daisy"], ["郁金香", "Tulip"], ["花", "Floral"], ["珍珠", "Pearl"], ["爱心", "Heart"], ["星", "Star"],
+    ["波点", "Polka Dot"], ["格子", "Plaid"], ["条纹", "Stripe"], ["豹纹", "Leopard"], ["蕾丝", "Lace"], ["毛绒", "Fluffy"],
+    ["法式", "French"], ["韩版", "Korean"], ["复古", "Vintage"], ["丝绒", "Velvet"], ["缎面", "Satin"], ["帆布", "Canvas"], ["皮", "PU Leather"],
+    ["蝴蝶结", "Bow"],
+  ];
+  // Item words: the first one found names the item.
+  const ITEMS = [
+    ["斜挎包", "Crossbody Bag"], ["单肩包", "Shoulder Bag"], ["水桶包", "Bucket Bag"], ["托特包", "Tote Bag"], ["双肩包", "Backpack"],
+    ["腋下包", "Underarm Bag"], ["钱包", "Wallet"], ["零钱包", "Coin Purse"], ["包", "Bag"],
+    ["拖鞋", "Slides"], ["凉鞋", "Sandals"], ["帆布鞋", "Canvas Shoes"], ["板鞋", "Sneakers"], ["玛丽珍", "Mary Jane Shoes"], ["鞋", "Shoes"],
+    ["连衣裙", "Dress"], ["吊带", "Cami"], ["半身裙", "Skirt"], ["衬衫", "Shirt"], ["上衣", "Top"], ["裙", "Dress"],
+    ["眼影", "Eyeshadow Palette"], ["口红", "Lipstick"], ["唇釉", "Lip Glaze"], ["唇泥", "Lip Mud"], ["腮红", "Blush"], ["粉底", "Foundation"], ["睫毛膏", "Mascara"],
+    ["项链", "Necklace"], ["耳环", "Earrings"], ["耳钉", "Earrings"], ["手链", "Bracelet"], ["戒指", "Ring"],
+    ["抓夹", "Hair Claw"], ["发夹", "Hair Clip"], ["边夹", "Hair Clip"], ["发圈", "Scrunchie"], ["发箍", "Headband"], ["头绳", "Hair Tie"],
+    ["笔记本", "Notebook"], ["本子", "Notebook"], ["中性笔", "Gel Pen"], ["笔", "Pen"], ["贴纸", "Stickers"], ["文具", "Stationery"],
+  ];
+  const COLORS = [["粉", "Pink"], ["蓝", "Blue"], ["绿", "Green"], ["紫", "Purple"], ["黄", "Yellow"], ["奶白", "Cream"], ["白", "White"], ["黑", "Black"], ["红", "Red"]];
+
+  // Price = (¥ × 20) + cargo (category weight × 850 ৳/kg) + buyer fee + profit, rounded to the nearest 10.
+  const WEIGHT_G = { Accessories: 50, Jewellery: 50, Stationery: 100, Makeup: 150, Dresses: 300, Bags: 500, Shoes: 800 };
+  const priceOf = (yuan, category) => {
+    const big = ["Bags", "Shoes", "Dresses"].includes(category);
+    const cargo = ((WEIGHT_G[category] || 0) / 1000) * 850;
+    return Math.round((yuan * 20 + cargo + (big ? 100 : 50) + (big ? 150 : 80)) / 10) * 10;
+  };
+  const categoryOf = (t) =>
+    /包(?!邮)/.test(t) ? "Bags"
+    : /鞋/.test(t) ? "Shoes"
+    : /裙|衣|衬衫|吊带|套装/.test(t) ? "Dresses"
+    : /眼影|口红|唇|腮红|粉底|睫毛|化妆|彩妆/.test(t) ? "Makeup"
+    : /项链|耳环|耳钉|手链|戒指|手镯/.test(t) ? "Jewellery"
+    : /笔|本子|笔记本|文具|贴纸|胶带/.test(t) ? "Stationery"
+    : "Accessories";
+  const nameOf = (title) => {
+    let t = title.toLowerCase().replace(/包邮/g, " "); // 包邮 = free shipping, not a bag
+    const words = [];
+    for (const [cn, en] of WORDS) {
+      if (t.includes(cn) && !words.includes(en)) {
+        words.push(en);
+        t = t.split(cn).join(" ");
+      }
+    }
+    const color = (COLORS.find(([cn]) => t.includes(cn)) || [])[1];
+    // Up to 2 describing words, then the item word (e.g. "Bag").
+    const item = (ITEMS.find(([cn]) => t.includes(cn)) || [])[1];
+    const parts = [color, ...words.slice(0, 2), item].filter(Boolean);
+    if (parts.length < 2 && /可爱/.test(title)) parts.unshift("Cute");
+    return parts.length ? parts.join(" ") : "Cute Item";
+  };
+  const pathOf = (url) => (url || "").replace(/^(https?:\/\/)?img[-0-9]*\.pddpic\.com\//, "").split("?")[0];
+  const galleryIn = (doc) => [
+    ...new Set(
+      (doc.documentElement.innerHTML.match(/img[-0-9]*\.pddpic\.com\/(?:mms-goods-image|mms-material-img|open-gw)\/[^"'?\s\\)&]+/g) || []).map(pathOf)
+    ),
+  ];
+
+  // Saves products to the sheet, then reads the sheet back to report how many are there.
+  const send = async (items) => {
+    await fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ key: KEY, items }),
+    });
+    const csv = await fetch(SCRIPT_URL).then((r) => r.text()).catch(() => "");
+    const saved = items.filter((i) => csv.includes(i.source)).length;
+    alert("Saved " + saved + " of " + items.length + " to Minibee ✓\nRefresh the Minibee site to see them.");
+  };
+
+  const panel = (html) => {
+    document.getElementById("casey-add")?.remove();
+    const box = document.createElement("div");
+    box.id = "casey-add";
+    box.style.cssText =
+      "position:fixed;inset:0;z-index:2147483647;background:#fff;overflow:auto;padding:12px;font:14px sans-serif;color:#222";
+    box.innerHTML = html;
+    document.body.appendChild(box);
+    return box;
+  };
+  const btn = (id, label, main) =>
+    '<button id="' + id + '" style="padding:10px 14px;border-radius:8px;font-size:15px;' +
+    (main ? "background:#c25d80;color:#fff;border:0" : "background:#fff;border:1px solid #ccc") + '">' + label + "</button>";
+
+  // ---- Many covers from a search page ----
+  if (/search_result/.test(location.href)) {
+    const found = new Map();
+    const look = (o, d) => {
+      if (!o || typeof o !== "object" || d > 2) return;
+      if (o.goodsID && o.imgUrl && !found.has(String(o.goodsID))) {
+        found.set(String(o.goodsID), o);
+        return;
+      }
+      for (const v of Object.values(o)) look(v, d + 1);
+    };
+    (window.rawData?.stores?.store?.data?.ssrListData?.list || []).forEach((g) => look(g, 0));
+    for (const img of document.querySelectorAll("img")) {
+      const k = Object.keys(img).find((k) => k.startsWith("__reactFiber"));
+      let f = k && img[k];
+      for (let i = 0; i < 14 && f; i++, f = f.return) {
+        try { look(f.memoizedProps, 0); } catch (e) {}
+      }
+    }
+    const goods = [...found.values()];
+    if (!goods.length) return alert("No items found. Scroll the search results a bit and try again.");
+
+    const box = panel(
+      '<div style="position:sticky;top:-12px;background:#fff;padding:8px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1">' +
+      '<b style="font-size:17px;flex:1">Add to Minibee: <span id="ca-n">0</span> of ' + goods.length + " selected</b>" +
+      btn("ca-all", "Select all") + btn("ca-save", "Save selected", true) + btn("ca-close", "Close") +
+      '</div><div id="ca-status" style="color:#c25d80;margin:4px 0"></div>' +
+      '<div id="ca-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px"></div>'
+    );
+    const $ = (id) => box.querySelector("#" + id);
+    const chosen = new Set();
+    const cards = goods.map((g) => {
+      const card = document.createElement("div");
+      card.style.cssText = "border:4px solid transparent;border-radius:10px;cursor:pointer;font-size:12px";
+      card.innerHTML =
+        '<img src="' + PROXY + pathOf(g.imgUrl) + '" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px">' +
+        "<div>" + nameOf(g.goodsName || "") + " · ৳" + priceOf(parseFloat(g.priceInfo) || 0, categoryOf(g.goodsName || "")) + "</div>" +
+        '<div style="color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + (g.goodsName || "") + "</div>";
+      const set = (on) => {
+        on ? chosen.add(g) : chosen.delete(g);
+        card.style.borderColor = on ? "#c25d80" : "transparent";
+        $("ca-n").textContent = chosen.size;
+      };
+      card.onclick = () => set(!chosen.has(g));
+      card.set = set;
+      $("ca-grid").appendChild(card);
+      return card;
+    });
+    $("ca-all").onclick = () => cards.forEach((c) => c.set(true));
+    $("ca-close").onclick = () => box.remove();
+
+    // Loads the product page in a hidden frame and takes its first 4 gallery photos.
+    const photosOf = (id) =>
+      new Promise((resolve) => {
+        const f = document.createElement("iframe");
+        f.style.cssText = "position:fixed;left:-3000px;width:375px;height:800px";
+        f.src = "/goods.html?goods_id=" + id;
+        document.body.appendChild(f);
+        let tries = 0;
+        const timer = setInterval(() => {
+          let photos = [];
+          try { photos = galleryIn(f.contentDocument); } catch (e) {}
+          if (photos.length >= 4 || ++tries > 24) {
+            clearInterval(timer);
+            f.remove();
+            resolve(photos.slice(0, 4));
+          }
+        }, 500);
+      });
+
+    $("ca-save").onclick = async () => {
+      const list = [...chosen];
+      if (!list.length) return alert("Tap the items you want first.");
+      $("ca-save").disabled = true;
+      const items = [];
+      let done = 0;
+      const queue = list.slice();
+      const worker = async () => {
+        while (queue.length) {
+          const g = queue.shift();
+          const photos = await photosOf(g.goodsID);
+          const title = g.goodsName || "";
+          const category = categoryOf(title);
+          items.push({
+            name: nameOf(title),
+            category,
+            price: priceOf(parseFloat(g.priceInfo) || 0, category),
+            images: (photos.length ? photos : [pathOf(g.imgUrl)]).map((p) => "/img/" + p),
+            description: "",
+            available: false,
+            models: MODELS[category].split(", ").filter(Boolean),
+            source: location.origin + "/goods.html?goods_id=" + g.goodsID,
+          });
+          $("ca-status").textContent = "Getting photos… " + ++done + " / " + list.length;
+        }
+      };
+      await Promise.all([worker(), worker(), worker()]);
+      $("ca-status").textContent = "Saving " + items.length + " items…";
+      await send(items);
+      box.remove();
+    };
+    return;
+  }
+
+  // ---- One cover from a product page ----
+  if (!/goods/.test(location.href)) return alert("Open a Pinduoduo search page or product page first.");
+
+  const paths = galleryIn(document).slice(0, 16);
+  const text = document.body.innerText;
+  // The price is split over several lines on the page ("¥\n3\n.\n73"), so drop whitespace first.
+  // Some pages hide the decimals ("¥3.??"); assume the highest (3.99).
+  const pm = text.replace(/\s+/g, "").match(/¥(\d+)(?:\.(\d+|\?\?))?/) || [];
+  const yuan = pm[1] ? Number(pm[1]) + (pm[2] === "??" ? 0.99 : Number("0." + (pm[2] || "0"))) : 0;
+  const title =
+    (text.match(/已(?:拼|抢|售)[^\n]*\n([^\n]{6,80})/) || [])[1] ||
+    text.split("\n").filter((l) => /[\u4e00-\u9fff]/.test(l) && l.length < 80).sort((a, b) => b.length - a.length)[0] || "";
+  const category = categoryOf(title);
+  const field = (label, html) => '<label style="display:block;margin-top:8px">' + label + "<br>" + html + "</label>";
+  const input = (id, value, type) =>
+    '<input id="' + id + '" type="' + (type || "text") + '" style="width:100%;padding:6px" value="' + String(value).replace(/"/g, "&quot;") + '">';
+
+  const box = panel(
+    '<b style="font-size:18px">Add to Minibee</b> <small>(' + yuan + " yuan)</small>" +
+    '<p style="margin:6px 0;color:#666;font-size:12px">' + title + "</p>" +
+    '<p style="margin:6px 0">Tap the photos to use (one item only, no text/notice photos):</p>' +
+    '<div id="ca-imgs" style="display:flex;flex-wrap:wrap;gap:4px"></div>' +
+    field("Name", input("ca-name", nameOf(title))) +
+    field("Category", '<select id="ca-cat" style="width:100%;padding:6px">' +
+      Object.keys(MODELS).map((c) => "<option" + (c === category ? " selected" : "") + ">" + c + "</option>").join("") + "</select>") +
+    field("Sizes (comma separated, optional)", input("ca-models", MODELS[category])) +
+    field("Price (৳)", input("ca-price", priceOf(yuan, category), "number")) +
+    field("Description", input("ca-desc", "")) +
+    '<label style="display:block;margin-top:8px"><input id="ca-avail" type="checkbox"> In stock (otherwise Pre-order)</label>' +
+    '<div style="margin-top:12px;display:flex;gap:8px">' + btn("ca-save", "Save", true) + btn("ca-close", "Close") + "</div>"
+  );
+  const $ = (id) => box.querySelector("#" + id);
+  $("ca-cat").onchange = (e) => {
+    $("ca-models").value = MODELS[e.target.value];
+    $("ca-price").value = priceOf(yuan, e.target.value);
+  };
+
+  const chosen = [];
+  paths.forEach((p) => {
+    const img = document.createElement("img");
+    img.src = PROXY + p;
+    img.style.cssText = "width:31%;max-width:150px;aspect-ratio:1;object-fit:cover;border:4px solid transparent;border-radius:6px";
+    img.onclick = () => {
+      const i = chosen.indexOf(p);
+      if (i === -1) chosen.push(p);
+      else chosen.splice(i, 1);
+      img.style.borderColor = i === -1 ? "#c25d80" : "transparent";
+    };
+    $("ca-imgs").appendChild(img);
+  });
+
+  $("ca-close").onclick = () => box.remove();
+  $("ca-save").onclick = async () => {
+    const name = $("ca-name").value.trim();
+    if (!name) return alert("Please type a name.");
+    if (!chosen.length) return alert("Please choose at least one photo.");
+    $("ca-save").disabled = true;
+    await send([{
+      name,
+      category: $("ca-cat").value,
+      price: Number($("ca-price").value) || priceOf(yuan, $("ca-cat").value),
+      images: chosen.map((p) => "/img/" + p),
+      description: $("ca-desc").value.trim(),
+      available: $("ca-avail").checked,
+      models: $("ca-models").value.split(",").map((s) => s.trim()).filter(Boolean),
+      source: location.origin + location.pathname + "?goods_id=" + new URLSearchParams(location.search).get("goods_id"),
+    }]);
+    box.remove();
+  };
+}
+
+document.getElementById("bookmarklet").href = "javascript:" + encodeURIComponent("(" + minibeeAdd + ")()");
+</script>
+</body>
+</html>
