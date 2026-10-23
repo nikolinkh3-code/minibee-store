@@ -267,7 +267,9 @@ $("login-btn").onclick = async () => {
   }
   $("login-btn").disabled = false;
 };
-$("login-pass").onkeydown = (e) => e.key === "Enter" && $("login-btn").click();
+$("login-pass").onkeydown = (e) => {
+  if (e.key === "Enter") $("login-btn").click();
+};
 
 $("setup-btn").onclick = async () => {
   const p1 = $("setup-pass").value, p2 = $("setup-pass2").value;
