@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="bn">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,23 +7,25 @@
 <title>Minibee Admin</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
+  /* store colors */
   :root {
-    --lav: #ef8faf;
-    --dark-lav: #c25d80;
-    --soft-lav: #fff0f5;
+    --accent: #ef8faf;
+    --accent-dark: #c25d80;
+    --accent-soft: #fff0f5;
     --cream: #fffaf7;
     --text: #342b30;
     --muted: #8d7d84;
     --line: #f0dde5;
-    --danger: #c0392b;
-    --ok: #2e8b57;
+    --button: linear-gradient(135deg, #c25d80, #ef8faf);
   }
+  /* end store colors */
+  :root { --danger: #c0392b; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--cream); color: var(--text); font: 16px/1.5 Inter, Arial, sans-serif; }
   .wrap { max-width: 560px; margin: 0 auto; padding: 16px 16px 60px; }
   header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
   .logo { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
-  .logo span { color: var(--dark-lav); }
+  .logo span { color: var(--accent-dark); }
   .card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 18px; margin-bottom: 14px; }
   h2 { margin: 0 0 12px; font-size: 19px; }
   label { display: block; margin: 12px 0 4px; font-weight: 600; font-size: 14px; }
@@ -31,33 +33,35 @@
     width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 12px; background: #fff; font: inherit; color: inherit;
   }
   textarea { min-height: 70px; resize: vertical; }
-  input:focus, select:focus, textarea:focus { outline: 2px solid var(--lav); border-color: transparent; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
   .btn { display: inline-block; border: 0; border-radius: 999px; padding: 12px 20px; font: inherit; font-weight: 700; cursor: pointer; }
-  .btn.main { background: linear-gradient(135deg, #c25d80, #ef8faf); color: #fff; width: 100%; font-size: 17px; }
+  .btn.main { background: var(--button); color: #fff; width: 100%; font-size: 17px; }
   .btn.main:disabled { opacity: .6; cursor: wait; }
-  .btn.ghost { background: var(--soft-lav); color: var(--dark-lav); }
+  .btn.ghost { background: var(--accent-soft); color: var(--accent-dark); }
   .btn.small { padding: 7px 12px; font-size: 13px; }
   .tabs { display: flex; gap: 8px; margin-bottom: 14px; }
   .tabs button { flex: 1; }
-  .tabs button.on { background: var(--dark-lav); color: #fff; }
+  .tabs button.on, .chips button.on { background: var(--accent-dark); color: #fff; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
   .muted { color: var(--muted); font-size: 13px; }
   .error { color: var(--danger); font-size: 14px; min-height: 20px; margin-top: 8px; }
-  .price-box { display: flex; justify-content: space-between; gap: 10px; background: var(--soft-lav); border-radius: 14px; padding: 12px 14px; margin-top: 10px; }
-  .price-box b { font-size: 20px; color: var(--dark-lav); display: block; }
+  .price-box { display: flex; justify-content: space-between; gap: 10px; background: var(--accent-soft); border-radius: 14px; padding: 12px 14px; margin-top: 10px; }
+  .price-box b { font-size: 20px; color: var(--accent-dark); display: block; }
   .photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; margin-top: 8px; }
-  .photo { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--soft-lav); }
+  .photo { position: relative; aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--accent-soft); }
   .photo img { width: 100%; height: 100%; object-fit: cover; }
   .photo button { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 50%; border: 0; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; }
-  .pick { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; border: 2px dashed var(--lav); border-radius: 12px; color: var(--dark-lav); font-weight: 700; cursor: pointer; text-align: center; font-size: 13px; }
+  .pick { display: flex; align-items: center; justify-content: center; aspect-ratio: 1; border: 2px dashed var(--accent); border-radius: 12px; color: var(--accent-dark); font-weight: 700; cursor: pointer; text-align: center; font-size: 13px; }
   .check { display: flex; align-items: center; gap: 8px; margin-top: 14px; font-weight: 600; }
   .check input { width: 20px; height: 20px; }
   .done { text-align: center; padding: 26px 18px; }
   .done .big { font-size: 46px; }
   .item { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
   .item:first-child { border-top: 0; }
-  .item img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; background: var(--soft-lav); flex: none; }
+  .item img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; background: var(--accent-soft); flex: none; }
   .item .info { flex: 1; min-width: 0; }
   .item .name { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item select { margin-top: 4px; padding: 5px 8px; font-size: 13px; border-radius: 8px; width: auto; max-width: 100%; }
   .item .actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
   .switch { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; }
   .del { background: #fdecea; color: var(--danger); }
@@ -67,75 +71,80 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">mini<span>bee</span> <small class="muted">admin</small></div>
-    <button class="btn ghost small hidden" id="logout">লগ আউট</button>
+    <div class="logo" id="logo"></div>
+    <button class="btn ghost small hidden" id="logout">Log out</button>
   </header>
 
-  <p class="muted" id="loading">লোড হচ্ছে…</p>
+  <p class="muted" id="loading">Loading…</p>
 
   <!-- Login -->
   <section class="card hidden" id="login-view">
-    <h2>অ্যাডমিন লগইন</h2>
-    <label for="login-pass">পাসওয়ার্ড</label>
+    <h2>Admin login</h2>
+    <label for="login-pass">Password</label>
     <input type="password" id="login-pass" autocomplete="current-password">
     <div class="error" id="login-error"></div>
-    <button class="btn main" id="login-btn">ঢুকুন</button>
+    <button class="btn main" id="login-btn">Log in</button>
   </section>
 
   <!-- First time: create password -->
   <section class="card hidden" id="setup-view">
-    <h2>নতুন পাসওয়ার্ড তৈরি করুন</h2>
-    <p class="muted">প্রথমবার ঢুকছেন। এই পাসওয়ার্ড দিয়েই পরে অ্যাডমিন পেজে ঢুকবেন। কমপক্ষে ৬ অক্ষর।</p>
-    <label for="setup-pass">পাসওয়ার্ড</label>
+    <h2>Create a password</h2>
+    <p class="muted">First visit. You'll use this password to open the admin page from now on. At least 6 characters.</p>
+    <label for="setup-pass">Password</label>
     <input type="password" id="setup-pass" autocomplete="new-password">
-    <label for="setup-pass2">আবার লিখুন</label>
+    <label for="setup-pass2">Repeat password</label>
     <input type="password" id="setup-pass2" autocomplete="new-password">
     <div class="error" id="setup-error"></div>
-    <button class="btn main" id="setup-btn">পাসওয়ার্ড সেভ করুন</button>
+    <button class="btn main" id="setup-btn">Save password</button>
   </section>
 
   <!-- Main -->
   <div class="hidden" id="main-view">
     <div class="tabs">
-      <button class="btn ghost on" data-tab="add">পণ্য যোগ করুন</button>
-      <button class="btn ghost" data-tab="list">পণ্যের তালিকা</button>
+      <button class="btn ghost on" data-tab="add">Add product</button>
+      <button class="btn ghost" data-tab="list">Products</button>
     </div>
 
     <section class="card" id="add-view">
-      <h2>নতুন পণ্য</h2>
-      <label>ছবি (এক বা একাধিক)</label>
+      <h2>New product</h2>
+      <label>Photos (one or more)</label>
       <div class="photos" id="photos">
-        <label class="pick" for="photo-input">+ ছবি<br>যোগ করুন</label>
+        <label class="pick" for="photo-input">+ Add<br>photos</label>
       </div>
       <input type="file" id="photo-input" accept="image/*" multiple class="hidden">
 
-      <label for="f-name">নাম</label>
-      <input type="text" id="f-name" placeholder="যেমন: Pink Bow Hair Clip">
+      <label for="f-name">Name</label>
+      <input type="text" id="f-name">
 
-      <label for="f-cat">ক্যাটাগরি</label>
+      <label for="f-cat">Category</label>
       <select id="f-cat"></select>
 
-      <label for="f-yuan">ইউয়ান দাম (¥)</label>
-      <input type="number" id="f-yuan" inputmode="decimal" step="0.01" min="0" placeholder="যেমন: 4.80">
-      <label for="f-weight">ওজন (গ্রাম)</label>
-      <input type="number" id="f-weight" inputmode="numeric" min="0" placeholder="খালি রাখলে ক্যাটাগরির ওজন">
+      <label for="f-yuan">Price in yuan (¥)</label>
+      <input type="number" id="f-yuan" inputmode="decimal" step="0.01" min="0" placeholder="e.g. 4.80">
 
-      <label for="f-price">বিক্রির দাম নিজে দিন (৳)</label>
-      <input type="number" id="f-price" inputmode="numeric" min="0" placeholder="খালি রাখলে ফর্মুলার দাম">
+      <div id="weight-field">
+        <label for="f-weight">Weight (grams)</label>
+        <input type="number" id="f-weight" inputmode="numeric" min="0">
+      </div>
+
+      <div id="own-price-field">
+        <label for="f-price">Selling price (৳), optional</label>
+        <input type="number" id="f-price" inputmode="numeric" min="0" placeholder="Leave empty to use the formula">
+      </div>
 
       <div class="price-box">
-        <div><span class="muted">বিক্রির দাম</span><b id="p-price">৳ —</b></div>
-        <div style="text-align:right"><span class="muted">৫০% অ্যাডভান্স</span><b id="p-adv">৳ —</b></div>
+        <div><span class="muted">Selling price</span><b id="p-price">৳ —</b></div>
+        <div style="text-align:right"><span class="muted">50% advance</span><b id="p-adv">৳ —</b></div>
       </div>
-      <p class="muted" id="p-how">হিসাব: (¥ × 20) + কার্গো (ওজন × ৮৫০ ৳/কেজি) + কিনে দেওয়ার ফি + লাভ, কাছের ১০-এ রাউন্ড</p>
+      <p class="muted" id="p-how"></p>
 
-      <label for="f-models">সাইজ (কমা দিয়ে আলাদা, না থাকলে খালি রাখুন)</label>
+      <label for="f-models" id="models-label"></label>
       <input type="text" id="f-models">
 
-      <label for="f-desc">বিবরণ</label>
-      <textarea id="f-desc" placeholder="ছোট করে লিখুন (ইংরেজিতে হলে ভালো)"></textarea>
+      <label for="f-desc">Description</label>
+      <textarea id="f-desc" placeholder="A short description"></textarea>
 
-      <label class="check"><input type="checkbox" id="f-stock"> স্টকে আছে (টিক না দিলে Pre-order)</label>
+      <label class="check"><input type="checkbox" id="f-stock"> In stock (otherwise Pre-order)</label>
 
       <div class="error" id="add-error"></div>
       <button class="btn main" id="add-btn">Add</button>
@@ -143,15 +152,16 @@
 
     <section class="card done hidden" id="done-view">
       <div class="big">✓</div>
-      <h2 id="done-title">সাইটে লাইভ হয়েছে</h2>
-      <p class="muted">minibee-store.pages.dev খুললেই দেখা যাবে।</p>
-      <button class="btn main" id="again-btn">আরেকটা যোগ করুন</button>
-      <p><a href="/" target="_blank" rel="noopener">সাইট দেখুন ↗</a></p>
+      <h2 id="done-title">Live on the site</h2>
+      <p class="muted" id="done-note"></p>
+      <button class="btn main" id="again-btn">Add another</button>
+      <p><a href="/" target="_blank" rel="noopener">View the site ↗</a></p>
     </section>
 
     <section class="card hidden" id="list-view">
-      <h2>যোগ করা পণ্য</h2>
-      <p class="muted">এখানে Sheet-এ রাখা পণ্যগুলো দেখায় (Admin আর Add to Minibee দিয়ে যোগ করা)। সাইটের শুরুর ৮টা পণ্য এখানে নেই।</p>
+      <h2>Products</h2>
+      <p class="muted" id="list-note"></p>
+      <div class="chips" id="chips"></div>
       <div class="error" id="list-error"></div>
       <div id="list"></div>
     </section>
@@ -159,41 +169,67 @@
 </div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbwoAfiW83JNrUBCFZJIQFfAHSwPHB3-ia5fhdSUGab9gVHtWrQz6lMY3vEyvTZ7gv7hzg/exec";
-// Default sizes per category (the site calls them "sizes"; the sheet column is "models").
-const MODELS = {
-  Bags: "",
-  Shoes: "35, 36, 37, 38, 39, 40",
-  Dresses: "S, M, L, XL",
-  Makeup: "",
-  Jewellery: "",
-  Accessories: "",
-  Stationery: "",
-};
-// Price = (¥ × 20) + cargo (weight × 850 ৳/kg) + buyer fee + profit, rounded to the nearest 10.
+// ---- Store settings (the only part that differs between Casey and Minibee) ----
 const WEIGHT_G = { Accessories: 50, Jewellery: 50, Stationery: 100, Makeup: 150, Dresses: 300, Bags: 500, Shoes: 800 };
-const BIG = ["Bags", "Shoes", "Dresses"]; // big items: buyer fee 100, profit 150; small: 50 and 80
+const BIG = ["Bags", "Shoes", "Dresses"]; // big items: buyer fee 100, profit 150; small items: 50 and 80
+const STORE = {
+  name: "Minibee",
+  logo: "mini<span>bee</span>",
+  site: "minibee-store.pages.dev",
+  api: "https://script.google.com/macros/s/AKfycbwoAfiW83JNrUBCFZJIQFfAHSwPHB3-ia5fhdSUGab9gVHtWrQz6lMY3vEyvTZ7gv7hzg/exec",
+  passwordKey: "minibeeAdminPass",
+  namePlaceholder: "e.g. Pink Bow Hair Clip",
+  modelsLabel: "Sizes (comma separated, leave empty if none)",
+  builtIn: "The 8 products built into the site are not listed here.",
+  // Default sizes per category (the site calls them "sizes"; the sheet column is "models")
+  categories: {
+    Bags: "",
+    Shoes: "35, 36, 37, 38, 39, 40",
+    Dresses: "S, M, L, XL",
+    Makeup: "",
+    Jewellery: "",
+    Accessories: "",
+    Stationery: "",
+  },
+  weightField: true,
+  ownPriceField: true,
+  weightOf: (category) => WEIGHT_G[category] || 0,
+  priceHow: "Formula: (¥ × 20) + cargo (weight × ৳850/kg) + buyer fee + profit, rounded to the nearest 10",
+  priceOf: (yuan, category, grams) => {
+    const big = BIG.includes(category);
+    const cargo = ((grams || WEIGHT_G[category] || 0) / 1000) * 850;
+    return Math.round((yuan * 20 + cargo + (big ? 100 : 50) + (big ? 150 : 80)) / 10) * 10;
+  },
+};
+// ---- End of store settings ----
+
 const MAX_SIDE = 1280; // photos are shrunk to this size before upload
+const CATEGORIES = Object.keys(STORE.categories);
 
 const $ = (id) => document.getElementById(id);
 const show = (...ids) => ids.forEach((id) => $(id).classList.remove("hidden"));
 const hide = (...ids) => ids.forEach((id) => $(id).classList.add("hidden"));
 const taka = (n) => "৳ " + new Intl.NumberFormat("en-BD").format(n);
-const priceOf = (yuan, category, grams) => {
-  const big = BIG.includes(category);
-  const cargo = ((grams || WEIGHT_G[category] || 0) / 1000) * 850;
-  return Math.round((yuan * 20 + cargo + (big ? 100 : 50) + (big ? 150 : 80)) / 10) * 10;
-};
+
+document.title = STORE.name + " Admin";
+$("logo").innerHTML = STORE.logo + ' <small class="muted">admin</small>';
+$("f-name").placeholder = STORE.namePlaceholder;
+$("models-label").textContent = STORE.modelsLabel;
+$("p-how").textContent = STORE.priceHow;
+$("done-note").textContent = "Open " + STORE.site + " to see it.";
+$("list-note").textContent = "Products saved in the Google Sheet (added here or with the Add to " + STORE.name + " button). " + STORE.builtIn;
+if (!STORE.weightField) hide("weight-field");
+if (!STORE.ownPriceField) hide("own-price-field");
 
 const store = {
-  get: () => { try { return localStorage.getItem("minibeeAdminPass") || ""; } catch (e) { return ""; } },
-  set: (v) => { try { localStorage.setItem("minibeeAdminPass", v); } catch (e) {} },
-  clear: () => { try { localStorage.removeItem("minibeeAdminPass"); } catch (e) {} },
+  get: () => { try { return localStorage.getItem(STORE.passwordKey) || ""; } catch (e) { return ""; } },
+  set: (v) => { try { localStorage.setItem(STORE.passwordKey, v); } catch (e) {} },
+  clear: () => { try { localStorage.removeItem(STORE.passwordKey); } catch (e) {} },
 };
 let password = "";
 
 async function api(body) {
-  const res = await fetch(API, {
+  const res = await fetch(STORE.api, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify({ ...body, password }),
@@ -222,7 +258,7 @@ $("login-btn").onclick = async () => {
   try {
     await tryLogin($("login-pass").value);
   } catch (e) {
-    $("login-error").textContent = e.message === "Wrong password" ? "পাসওয়ার্ড ভুল।" : "সমস্যা হয়েছে: " + e.message;
+    $("login-error").textContent = e.message === "Wrong password" ? "Wrong password." : "Something went wrong: " + e.message;
   }
   $("login-btn").disabled = false;
 };
@@ -231,13 +267,13 @@ $("login-pass").onkeydown = (e) => e.key === "Enter" && $("login-btn").click();
 $("setup-btn").onclick = async () => {
   const p1 = $("setup-pass").value, p2 = $("setup-pass2").value;
   $("setup-error").textContent = "";
-  if (p1.length < 6) return ($("setup-error").textContent = "কমপক্ষে ৬ অক্ষর দিন।");
-  if (p1 !== p2) return ($("setup-error").textContent = "দুটো পাসওয়ার্ড মেলেনি।");
+  if (p1.length < 6) return ($("setup-error").textContent = "Use at least 6 characters.");
+  if (p1 !== p2) return ($("setup-error").textContent = "The passwords don't match.");
   $("setup-btn").disabled = true;
   password = p1;
   const r = await api({ action: "setPassword" }).catch((e) => ({ ok: false, error: e.message }));
   $("setup-btn").disabled = false;
-  if (!r.ok) return ($("setup-error").textContent = r.error || "সমস্যা হয়েছে");
+  if (!r.ok) return ($("setup-error").textContent = r.error || "Something went wrong");
   await tryLogin(p1).catch((e) => ($("setup-error").textContent = e.message));
 };
 
@@ -264,25 +300,26 @@ document.querySelectorAll("[data-tab]").forEach((b) => {
 });
 
 // ---- Add form ----
-Object.keys(MODELS).forEach((c) => $("f-cat").insertAdjacentHTML("beforeend", "<option>" + c + "</option>"));
-$("f-models").value = MODELS.Bags;
+CATEGORIES.forEach((c) => $("f-cat").insertAdjacentHTML("beforeend", "<option>" + c + "</option>"));
+$("f-models").value = STORE.categories[CATEGORIES[0]];
 let modelsEdited = false;
 $("f-models").oninput = () => (modelsEdited = true);
+
 // Selling price: the typed price if given, otherwise the formula.
 const currentPrice = () => {
-  const own = parseFloat($("f-price").value);
+  const own = STORE.ownPriceField ? parseFloat($("f-price").value) : 0;
   if (own > 0) return Math.round(own);
   const y = parseFloat($("f-yuan").value);
-  return y > 0 ? priceOf(y, $("f-cat").value, parseFloat($("f-weight").value)) : 0;
+  return y > 0 ? STORE.priceOf(y, $("f-cat").value, parseFloat($("f-weight").value)) : 0;
 };
 const updatePrice = () => {
   const p = currentPrice();
   $("p-price").textContent = p ? taka(p) : "৳ —";
   $("p-adv").textContent = p ? taka(p / 2) : "৳ —";
-  $("f-weight").placeholder = "খালি রাখলে " + WEIGHT_G[$("f-cat").value] + " গ্রাম";
+  if (STORE.weightField) $("f-weight").placeholder = "Empty = " + STORE.weightOf($("f-cat").value) + " g for this category";
 };
 $("f-cat").onchange = () => {
-  if (!modelsEdited) $("f-models").value = MODELS[$("f-cat").value];
+  if (!modelsEdited) $("f-models").value = STORE.categories[$("f-cat").value];
   updatePrice();
 };
 ["f-yuan", "f-weight", "f-price"].forEach((id) => ($(id).oninput = updatePrice));
@@ -304,7 +341,7 @@ function shrink(file) {
       const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
       resolve({ data: dataUrl.split(",")[1], url: dataUrl });
     };
-    img.onerror = () => reject(new Error("ছবিটা খোলা গেল না: " + file.name));
+    img.onerror = () => reject(new Error("Couldn't open this photo: " + file.name));
     img.src = url;
   });
 }
@@ -335,8 +372,8 @@ function resetForm() {
   photos = [];
   drawPhotos();
   ["f-name", "f-yuan", "f-weight", "f-price", "f-desc"].forEach((id) => ($(id).value = ""));
-  $("f-cat").value = "Bags";
-  $("f-models").value = MODELS.Bags;
+  $("f-cat").value = CATEGORIES[0];
+  $("f-models").value = STORE.categories[CATEGORIES[0]];
   modelsEdited = false;
   $("f-stock").checked = false;
   updatePrice();
@@ -345,42 +382,42 @@ function resetForm() {
 
 $("add-btn").onclick = async () => {
   const name = $("f-name").value.trim();
-  const yuan = parseFloat($("f-yuan").value);
+  const price = currentPrice();
   $("add-error").textContent = "";
-  if (!photos.length) return ($("add-error").textContent = "অন্তত একটা ছবি দিন।");
-  if (!name) return ($("add-error").textContent = "নাম লিখুন।");
-  if (!(yuan > 0) && !(parseFloat($("f-price").value) > 0)) return ($("add-error").textContent = "ইউয়ান দাম বা বিক্রির দাম লিখুন।");
+  if (!photos.length) return ($("add-error").textContent = "Add at least one photo.");
+  if (!name) return ($("add-error").textContent = "Type a name.");
+  if (!price) return ($("add-error").textContent = STORE.ownPriceField ? "Type the yuan price or a selling price." : "Type the yuan price.");
 
   const btn = $("add-btn");
   btn.disabled = true;
   try {
     const images = [];
     for (let i = 0; i < photos.length; i++) {
-      btn.textContent = "ছবি আপলোড হচ্ছে " + (i + 1) + "/" + photos.length + "…";
+      btn.textContent = "Uploading photo " + (i + 1) + "/" + photos.length + "…";
       const r = await api({ action: "upload", data: photos[i].data, mime: "image/jpeg", name: name + " " + (i + 1) + ".jpg" });
-      if (!r.ok) throw new Error(r.error || "ছবি আপলোড হয়নি");
+      if (!r.ok) throw new Error(r.error || "Photo upload failed");
       images.push("/gimg/" + r.id);
     }
-    btn.textContent = "সাইটে যোগ হচ্ছে…";
+    btn.textContent = "Adding to the site…";
     const r = await api({
       action: "add",
       item: {
         name,
         category: $("f-cat").value,
-        price: currentPrice(),
+        price,
         images,
         description: $("f-desc").value.trim(),
         available: $("f-stock").checked,
         models: $("f-models").value.split(",").map((s) => s.trim()).filter(Boolean),
       },
     });
-    if (!r.ok) throw new Error(r.error || "যোগ হয়নি");
-    $("done-title").textContent = "“" + name + "” সাইটে লাইভ হয়েছে";
+    if (!r.ok) throw new Error(r.error || "Couldn't add the product");
+    $("done-title").textContent = "“" + name + "” is live on the site";
     hide("add-view");
     show("done-view");
     resetForm();
   } catch (e) {
-    $("add-error").textContent = "সমস্যা হয়েছে: " + e.message;
+    $("add-error").textContent = "Something went wrong: " + e.message;
   }
   btn.disabled = false;
   btn.textContent = "Add";
@@ -392,17 +429,44 @@ $("again-btn").onclick = () => {
   window.scrollTo(0, 0);
 };
 
-// ---- List ----
+// ---- Product list ----
+let listItems = [];
+let listFilter = "All";
+
 async function loadList() {
   $("list-error").textContent = "";
-  $("list").innerHTML = '<p class="muted">লোড হচ্ছে…</p>';
+  $("chips").innerHTML = "";
+  $("list").innerHTML = '<p class="muted">Loading…</p>';
   const r = await api({ action: "list" }).catch((e) => ({ ok: false, error: e.message }));
   if (!r.ok) {
     $("list").innerHTML = "";
-    return ($("list-error").textContent = r.error || "লোড হয়নি");
+    return ($("list-error").textContent = r.error || "Couldn't load the products");
   }
-  const items = r.items.filter((it) => it.name).reverse();
-  if (!items.length) return ($("list").innerHTML = '<p class="muted">এখনো কোনো পণ্য নেই।</p>');
+  listItems = r.items.filter((it) => it.name).reverse();
+  drawList();
+}
+
+function drawChips() {
+  const counts = {};
+  listItems.forEach((it) => (counts[it.category] = (counts[it.category] || 0) + 1));
+  const names = ["All", ...CATEGORIES, ...Object.keys(counts).filter((c) => !CATEGORIES.includes(c))];
+  $("chips").innerHTML = "";
+  names.forEach((c) => {
+    const n = c === "All" ? listItems.length : counts[c] || 0;
+    if (!n && c !== "All") return;
+    const b = document.createElement("button");
+    b.className = "btn ghost small" + (c === listFilter ? " on" : "");
+    b.textContent = c + " (" + n + ")";
+    b.onclick = () => { listFilter = c; drawList(); };
+    $("chips").appendChild(b);
+  });
+}
+
+function drawList() {
+  if (listFilter !== "All" && !listItems.some((it) => it.category === listFilter)) listFilter = "All";
+  drawChips();
+  const items = listItems.filter((it) => listFilter === "All" || it.category === listFilter);
+  if (!items.length) return ($("list").innerHTML = '<p class="muted">No products yet.</p>');
   $("list").innerHTML = "";
   items.forEach((it) => {
     const first = (it.images || "").split("|")[0].trim();
@@ -410,25 +474,42 @@ async function loadList() {
     row.className = "item";
     row.innerHTML =
       '<img alt="">' +
-      '<div class="info"><div class="name"></div><div class="muted"></div></div>' +
-      '<div class="actions"><label class="switch"><input type="checkbox"> স্টকে আছে</label>' +
-      '<button class="btn small del">মুছুন</button></div>';
+      '<div class="info"><div class="name"></div><div class="muted"></div><select aria-label="Category"></select></div>' +
+      '<div class="actions"><label class="switch"><input type="checkbox"> In stock</label>' +
+      '<button class="btn small del">Delete</button></div>';
     if (first) row.querySelector("img").src = first;
     row.querySelector(".name").textContent = it.name;
-    row.querySelector(".info .muted").textContent = it.category + " · " + taka(Number(it.price) || 0);
+    row.querySelector(".info .muted").textContent = taka(Number(it.price) || 0);
+
+    const cat = row.querySelector("select");
+    const options = CATEGORIES.includes(it.category) ? CATEGORIES : [it.category, ...CATEGORIES];
+    options.forEach((c) => cat.insertAdjacentHTML("beforeend", "<option>" + c + "</option>"));
+    cat.value = it.category;
+    cat.onchange = async () => {
+      cat.disabled = true;
+      const res = await api({ action: "category", source: it.source, category: cat.value }).catch(() => ({ ok: false }));
+      cat.disabled = false;
+      if (!res.ok) { cat.value = it.category; return alert("Couldn't change the category."); }
+      it.category = cat.value;
+      drawList();
+    };
+
     const box = row.querySelector("input");
     box.checked = it.available === "yes";
     box.onchange = async () => {
       box.disabled = true;
       const res = await api({ action: "stock", source: it.source, available: box.checked }).catch(() => ({ ok: false }));
-      if (!res.ok) { box.checked = !box.checked; alert("স্টক বদলানো যায়নি।"); }
+      if (res.ok) it.available = box.checked ? "yes" : "no";
+      else { box.checked = !box.checked; alert("Couldn't change the stock."); }
       box.disabled = false;
     };
+
     row.querySelector(".del").onclick = async () => {
-      if (!confirm("“" + it.name + "” মুছে ফেলবেন? সাইট থেকেও চলে যাবে।")) return;
+      if (!confirm("Delete “" + it.name + "”? It will also disappear from the site.")) return;
       const res = await api({ action: "delete", source: it.source }).catch(() => ({ ok: false }));
-      if (res.ok) row.remove();
-      else alert("মুছা যায়নি।");
+      if (!res.ok) return alert("Couldn't delete.");
+      listItems = listItems.filter((x) => x !== it);
+      drawList();
     };
     $("list").appendChild(row);
   });
